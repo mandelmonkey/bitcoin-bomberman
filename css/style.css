@@ -1,0 +1,91 @@
+ .container {
+    width: 545px;
+}
+
+#game {
+    margin: auto;
+    text-align: center;
+}
+#withdraw {
+    
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.7);
+    position:absolute;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    z-index:10;
+    text-align: center;
+    display: none;
+}
+#paywall {
+    
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.7);
+    position:absolute;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    z-index:10;
+    text-align: center;
+}
+#paywallTitle {
+    color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+    font-size:xx-large;
+}
+#qrcode {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.footer .alert {
+    text-align: center;
+    line-height: 35px;
+}
+
+.footer .alert img {
+    margin-top: -3px;
+    margin-right: 5px;
+}
+
+h1 {
+    line-height: 64px;
+    margin-bottom: 0;
+}
+
+.html5 {
+    background: url('../img/html5.png');
+    width: 64px;
+    height: 64px;
+    display: block;
+    float: left;
+    margin-right: 10px;
+}
+
+.html5 span {
+    display: none;
+}
+
+h1 strong {
+    color: #FF4444;
+}
+
+.credits {
+    color: gray;
+}
+
+.credits a {
+    color: gray;
+    text-decoration: underline;
+}
+
+.credits a:hover {
+    color: black;
+}
