@@ -33,67 +33,11 @@ function updateWithdrawUI(){
 }
 
 function createWithdrawLNURL(){
-    const Http = new XMLHttpRequest();
-    const url = 'https://api.zebedee.io/v0/withdrawal-requests';
-
-    Http.open("POST", url);
-
-    Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    Http.setRequestHeader("apikey", config.API_KEY);
-
-    const payload = JSON.stringify({
-        "expiresIn": 300,
-        "amount": gGameEngine.totalSats * 1000,
-        "description": "Bomberman withdraw",
-        "internalId": "11af01d092444a317cb33faa6b8304b8",
-        "callbackUrl": "https://your-website.com/callback"
-    });
-
-    Http.send(payload);
-
-    Http.onreadystatechange = (e) => {
-
-        if (Http.readyState === XMLHttpRequest.DONE) {
-            
-            const data = JSON.parse(Http.responseText);
-        
-            currentChargeID = data.data.id;
-
-            makeWithdrawQRCode(data)
-        }
-
-    }
+     
 }
 
 function checkWithdraw() {
-    const Http = new XMLHttpRequest();
-    const url = 'https://api.zebedee.io/v0/withdrawal-requests/' + currentChargeID;
-
-    Http.open("GET", url);
-
-    Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    Http.setRequestHeader("apikey", config.API_KEY);
-
-    Http.send();
-
-    Http.onreadystatechange = (e) => {
-
-        if (Http.readyState === XMLHttpRequest.DONE) {
- 
-            const data = JSON.parse(Http.responseText);
-
-            const status = data.data.status;
-            if (status === "pending") {
-                setTimeout(function() {
-                    checkWithdraw();
-                }, 2000);
-            } else if (status === "completed") {
-              updateWithdrawUI();
-            }
-        }
-    }
-
-
+    
 }
 
 document.getElementById('withdrawButton').onclick = withdraw;
