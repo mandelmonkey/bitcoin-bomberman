@@ -1,3 +1,19 @@
+
+function makeWithdrawQRCode(data){
+    var typeNumber = 20;
+    var errorCorrectionLevel = 'L';
+    var qr = qrcode(typeNumber, errorCorrectionLevel);
+    qr.addData(data.data.invoice.request);
+
+    qr.make();
+
+    document.getElementById('withdrawQRcode').style.display = "block";
+    document.getElementById('withdrawQRcode').innerHTML = qr.createImgTag(4);
+    setTimeout(function() {
+        checkWithdraw();
+    }, 2000);
+}
+
 function withdraw() {
 
     if (gGameEngine.totalSats == 0) {
@@ -7,14 +23,16 @@ function withdraw() {
 
     document.getElementById('withdrawQRcode').style.display = "none";
     document.getElementById('withdraw').style.display = "block";
+    createWithdrawLNURL();
+}
 
+function updateWithdrawUI(){
+    gGameEngine.totalSats = 0;
+    document.getElementById('satsLabel').innerHTML = gGameEngine.totalSats + " sats";
+    document.getElementById('withdraw').style.display = "none";
+}
 
-    var typeNumber = 20;
-    var errorCorrectionLevel = 'L';
-    var qr = qrcode(typeNumber, errorCorrectionLevel);
-
-
-
+function createWithdrawLNURL(){
     const Http = new XMLHttpRequest();
     const url = 'https://api.zebedee.io/v0/withdrawal-requests';
 
@@ -36,20 +54,12 @@ function withdraw() {
     Http.onreadystatechange = (e) => {
 
         if (Http.readyState === XMLHttpRequest.DONE) {
-            console.log(e);
-            console.log(Http.responseText)
+            
             const data = JSON.parse(Http.responseText);
-            console.log(data.data.invoice.uri)
+        
             currentChargeID = data.data.id;
-            qr.addData(data.data.invoice.request);
 
-            qr.make();
-
-            document.getElementById('withdrawQRcode').style.display = "block";
-            document.getElementById('withdrawQRcode').innerHTML = qr.createImgTag(4);
-            setTimeout(function() {
-                checkWithdraw();
-            }, 2000);
+            makeWithdrawQRCode(data)
         }
 
     }
@@ -69,10 +79,7 @@ function checkWithdraw() {
     Http.onreadystatechange = (e) => {
 
         if (Http.readyState === XMLHttpRequest.DONE) {
-
-            console.log(Http.responseText)
-
-
+ 
             const data = JSON.parse(Http.responseText);
 
             const status = data.data.status;
@@ -81,9 +88,7 @@ function checkWithdraw() {
                     checkWithdraw();
                 }, 2000);
             } else if (status === "completed") {
-                gGameEngine.totalSats = 0;
-                document.getElementById('satsLabel').innerHTML = gGameEngine.totalSats + " sats";
-                document.getElementById('withdraw').style.display = "none";
+              updateWithdrawUI();
             }
         }
     }
