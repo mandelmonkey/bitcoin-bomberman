@@ -22,33 +22,40 @@ function startGame(){
 }
 
 function createInvoice() {
-    
-    const Http = new XMLHttpRequest();
-    const url = 'https://api.zebedee.io/v0/charges';
+  const Http = new XMLHttpRequest();
+  const url = "https://api.zebedee.io/v0/charges";
 
-    Http.open("POST", url);
+  Http.open("POST", url);
 
-    Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    Http.setRequestHeader("apikey", config.API_KEY);
+  Http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  Http.setRequestHeader("apikey", config.API_KEY);
 
-    const payload = JSON.stringify({
-        "expiresIn": 300,
-        "amount": config.FEE * 1000,
-        "description": "Bomberman Paywall",
-        "internalId": "11af01d092444a317cb33faa6b8304b8",
-        "callbackUrl": "https://your-website.com/callback"
-    })
-    Http.send(payload);
+  const payload = JSON.stringify({
+    expiresIn: 300,
+    amount: config.FEE * 1000,
+    description: "Bomberman Paywall",
+    internalId: "11af01d092444a317cb33faa6b8304b8",
+    callbackUrl: "https://your-website.com/callback",
+  });
 
-    Http.onreadystatechange = (e) => {
+  Http.send(payload);
 
-        if (Http.readyState === XMLHttpRequest.DONE) { 
-            const data = JSON.parse(Http.responseText);
-            currentChargeID = data.data.id;
-            createInvoiceQRCode(data);
+  Http.onreadystatechange = () => {
+    if (Http.readyState === XMLHttpRequest.DONE) {
+      if (Http.status >= 200 && Http.status < 300) {
+        try {
+          const data = JSON.parse(Http.responseText);
+          currentChargeID = data.data.id;
+          createInvoiceQRCode(data);
+        } catch (error) {
+          console.error("Error parsing response:", error);
         }
-
+      } else {
+        console.error("Request failed:", Http.status, Http.statusText);
+        console.error("Response text:", Http.responseText);
+      }
     }
+  };
 }
 
 function checkPayment() {
